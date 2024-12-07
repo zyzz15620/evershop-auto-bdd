@@ -18,10 +18,19 @@ dependencies {
     testImplementation("io.cucumber:cucumber-junit-platform-engine")
     testImplementation("org.junit.platform:junit-platform-suite")
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation 'com.microsoft.playwright:playwright:1.48.0'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
+
 }
 
 test {
     useJUnitPlatform()
     systemProperty("cucumber.junit-platform.naming-strategy", "long")
     //This is needed in case the scenario name is too long
+}
+
+// Usage: ./gradlew playwright --args="help"
+task playwright(type: JavaExec) {
+    classpath sourceSets.test.runtimeClasspath
+    mainClass = 'com.microsoft.playwright.CLI'
 }
