@@ -1,11 +1,14 @@
 package steps.admin;
 
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.junit.Assert.assertNull;
 import static steps.Hooks.page;
 
 public class AdminLoginStepdefs {
@@ -29,8 +32,24 @@ public class AdminLoginStepdefs {
         page.locator(buttonXpath).click();
     }
 
-    @Then("I should see Dashboard page")
+    @Then("User should see Dashboard page")
     public void iShouldSeeDashboardPage() {
         assertThat(page.locator("//h1[normalize-space(text())='Dashboard']")).isVisible();
+    }
+
+    @Then("User should see error message for {string} is {string}")
+    public void verifyValidationMessage(String label, String errorMessage) {
+        String xpath = String.format("//div[./label[normalize-space(.//text())='%s']]//div[contains(concat(' ',normalize-space(@class),' '),' field-error ')]", label);
+        if ("".equals(errorMessage)){
+            Locator messageLocator = page.locator(xpath);
+            try {
+                messageLocator.waitFor(new Locator.WaitForOptions().setTimeout(1000));
+            } catch (Exception e){
+                messageLocator = null;
+            }
+            assertNull(messageLocator);
+        } else {
+            assertThat(page.locator(xpath)).hasText(errorMessage);
+        }
     }
 }
