@@ -27,7 +27,6 @@ public class Hooks {
     public void beforeEach(){
         context = browser.newContext();
         page = context.newPage();
-
     }
 
     @After

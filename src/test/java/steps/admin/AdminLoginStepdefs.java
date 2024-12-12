@@ -14,16 +14,10 @@ import static steps.Hooks.page;
 public class AdminLoginStepdefs {
 
     @Given("User navigate to admin login page")
-    public void navigateAdminLoginPage(){
+    public void navigateAdminLogin(){
         page.navigate("http://localhost:3000/admin/login");
         String buttonSignInXpath = "//button[normalize-space(.//text())='SIGN IN']";
         assertThat(page.locator(buttonSignInXpath)).isVisible();
-    }
-
-    @When("User input {string} field with value {string}")
-    public void inputEmail(String label, String value) {
-        String inputXpath = String.format("//div[./label[normalize-space(.//text())='%s']]//input", label);
-        page.locator(inputXpath).fill(value);
     }
 
     @And("User click on button {string}")
@@ -32,13 +26,8 @@ public class AdminLoginStepdefs {
         page.locator(buttonXpath).click();
     }
 
-    @Then("User should see Dashboard page")
-    public void iShouldSeeDashboardPage() {
-        assertThat(page.locator("//h1[normalize-space(text())='Dashboard']")).isVisible();
-    }
-
     @Then("User should see error message for {string} is {string}")
-    public void verifyValidationMessage(String label, String errorMessage) {
+    public void verifyErrorMessage(String label, String errorMessage) {
         String xpath = String.format("//div[./label[normalize-space(.//text())='%s']]//div[contains(concat(' ',normalize-space(@class),' '),' field-error ')]", label);
         if ("".equals(errorMessage)){
             Locator messageLocator = page.locator(xpath);
