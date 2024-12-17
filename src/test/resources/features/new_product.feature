@@ -12,7 +12,6 @@ Feature: New product
     When User select menu item "New Product"
     Then User now in page with title "Create A New Product"
     When User input "Name" field with value "Bitis"
-#    And User input "SKU" field with value "123456"
     And User input a random SKU
     And User input "Price" field with value "100"
     And User input "Weight" field with value "0.5"
@@ -43,10 +42,23 @@ Feature: New product
     And User select "XXL" on dropdown Attributes "Size"
     And User click button "Save"
     Then User see alert notification "Product saved successfully!"
-    And User delete product "Bitis"
+#    And User delete product "Bitis"
     And User now in page with title "Editing Bitis"
     # Ko nên thêm assert kiểm tra đã delete chưa vì nếu nó fail thì ảnh hướng kết quả của testcase này vì mục đích ko phải test delete
     # Vẫn nên dynamic cái SKU vì giả sử nhỡ cái tính năng delete nó hỏng thì lần chạy test tiếp theo bị duplicate
+
+  @FrontEnd_Verify_CreateProduct
+  Scenario: Verify go to Edit page after created a product
+    When User select menu item "New Product"
+    Then User now in page with title "Create A New Product"
+    When User input "Name" field with value "Bitis"
+    And User input a random SKU
+    And User input "Price" field with value "100"
+    And User input "Weight" field with value "0.5"
+    And User input "Url key" field with value "new_brand"
+    And User input "Quantity" field with value "10"
+    And User click button "Save"
+    Then User should see "404 Page Not Found" page
 
 
 

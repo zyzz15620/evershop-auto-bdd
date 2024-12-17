@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static data.ProductsData.STUB_RESPONSE_CREATE_PRODUCT;
+
 public class Hooks {
     public static Playwright playwright;
     public static Browser browser;
@@ -45,7 +47,7 @@ public class Hooks {
         });
     }
 
-    @Before("@Test_Block_Login")
+    @Before("@FrontEnd_Verify_Login")
     public void beforeEachLogin(){
         page.route("**", handler -> {
             String pageUrl = handler.request().url();
@@ -57,6 +59,24 @@ public class Hooks {
                         .setStatus(500)
                         .setContentType("text/plain")
                         .setBody("Server Lỗi!"));
+            } else {
+                handler.resume();
+            }
+        });
+    }
+
+    @Before("@FrontEnd_Verify_CreateProduct")
+    public void beforeEachProductCreate(){
+        page.route("**", handler -> {
+            String pageUrl = handler.request().url();
+            String method = handler.request().method();
+            System.out.println("URL: " + pageUrl);
+            System.out.println("METHOD: " + method);
+            if("POST".equals(method) && pageUrl.endsWith("/api/products")){
+                handler.fulfill(new Route.FulfillOptions()
+                        .setStatus(500)
+                        .setContentType("application/json")
+                        .setBody(STUB_RESPONSE_CREATE_PRODUCT));
             } else {
                 handler.resume();
             }

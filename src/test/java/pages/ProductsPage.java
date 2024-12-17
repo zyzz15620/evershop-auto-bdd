@@ -54,4 +54,8 @@ public class ProductsPage extends CommonPage {
         page.locator(productNameXpath).click();
         Thread.sleep(5000);
     }
+
+    public void verifyCreateProductRequest(){
+
+    }
 }

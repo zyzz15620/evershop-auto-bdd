@@ -93,4 +93,9 @@ public class NewProductStepdefs {
     public void verifyInputField(String label, String value) {
         editProductPage.verifyInputFieldValue(label, value);
     }
+
+    @Then("Stub Api will verify the client's request")
+    public void stubApiWillVerifyTheClientSRequest() {
+
+    }
 }

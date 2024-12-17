@@ -2,14 +2,13 @@ Feature: Admin - Login
   Background:
     Given User navigate to admin login page
 
-
   Scenario: Verify login successful
     When User input "Email" field with value "total650@gmail.com"
     And User input "Password" field with value "12345678"
     And User click on button "SIGN IN"
     Then User should see "Dashboard" page
 
-    @Test_Block_Login
+  @FrontEnd_Verify_Login
   Scenario: Verify login blocked
     When User input "Email" field with value "total650@gmail.com"
     And User input "Password" field with value "12345678"
