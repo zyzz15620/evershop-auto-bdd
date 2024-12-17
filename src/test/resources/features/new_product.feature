@@ -1,16 +1,19 @@
 Feature: New product
   Background:
     Given User navigate to admin login page
-
-  Scenario: Verify admin is able to create new product
     When User input "Email" field with value "total650@gmail.com"
     And User input "Password" field with value "12345678"
     And User click on button "SIGN IN"
     Then User should see "Dashboard" page
+
+    # Lẽ ra là phải có thêm dùng GET API để verify lại sản phẩm được tạo có đúng thông tin ko nhưng ở đây ko có GET API mà phải verify lại qua UI
+    # cho nên tạo luôn scenario mới cho rồi: create bằng API rồi verify bằng UI
+  Scenario: Verify admin is able to create new product
     When User select menu item "New Product"
-    Then User should see "New Product" page with title "Create A New Product"
+    Then User now in page with title "Create A New Product"
     When User input "Name" field with value "Bitis"
-    And User input "SKU" field with value "123456"
+#    And User input "SKU" field with value "123456"
+    And User input a random SKU
     And User input "Price" field with value "100"
     And User input "Weight" field with value "0.5"
     And User select category "Men" on New Product page
@@ -40,3 +43,25 @@ Feature: New product
     And User select "XXL" on dropdown Attributes "Size"
     And User click button "Save"
     Then User see alert notification "Product saved successfully!"
+    And User delete product "Bitis"
+    And User now in page with title "Editing Bitis"
+    # Ko nên thêm assert kiểm tra đã delete chưa vì nếu nó fail thì ảnh hướng kết quả của testcase này vì mục đích ko phải test delete
+    # Vẫn nên dynamic cái SKU vì giả sử nhỡ cái tính năng delete nó hỏng thì lần chạy test tiếp theo bị duplicate
+
+  Scenario: Verify admin is able to edit new product
+    When User select menu item "Products"
+    And User now in page with title "Products"
+    And User create a product
+    And User search for product that just created
+    And User click on the product that just created
+#    And User now in page with title "Editing Backpack"
+#    Then User see should see input field "Name" is "Backpack"
+#    Then User see should see input field "SKU" is "111"
+#    Then User see should see input field "Price" is "300"
+    And User input "Name" field with value "Bitis"
+    And User input "SKU" field with value "222"
+    And User input "Price" field with value "500"
+    And User click button "Save"
+    Then User see alert notification "Product saved successfully!"
+
+
