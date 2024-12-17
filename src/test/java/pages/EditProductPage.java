@@ -7,9 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static common.ConstantUtils.*;
 
 public class EditProductPage extends CommonPage{
-    private static String DELETED_PRODUCT_API = "http://localhost:3000/api/products/%s";
     public EditProductPage(Page page) {
         super(page);
     }
@@ -22,7 +22,7 @@ public class EditProductPage extends CommonPage{
         String pageUrl = page.url();
         List<String> urlElements = List.of(pageUrl.split("/"));
         String id = urlElements.get(urlElements.size()-1);
-        APIResponse response = page.request().delete(String.format(DELETED_PRODUCT_API, id));
+        APIResponse response = page.request().delete(COMMON_URL + String.format(DELETED_PRODUCT_API, id));
         String responseBody = new String(response.body(), StandardCharsets.UTF_8);
         System.out.println(responseBody);
     }

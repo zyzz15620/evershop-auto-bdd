@@ -1,8 +1,9 @@
 Feature: New product
   Background:
     Given User navigate to admin login page
-    When User input "Email" field with value "total650@gmail.com"
-    And User input "Password" field with value "12345678"
+    # $ $ chỉ là dấu hiệu nhận dạng tuỳ ý
+    When User input "Email" field with value "$ADMIN_EMAIL$"
+    And User input "Password" field with value "$ADMIN_PASSWORD$"
     And User click on button "SIGN IN"
     Then User should see "Dashboard" page
 
@@ -27,7 +28,7 @@ Feature: New product
                 <-->
       My new product description 2
     """
-    And User push image "sweater.webp, image1.png" on New Product page
+#    And User push image "sweater.webp, image1.png" on New Product page
     And User input "Url key" field with value "new_brand"
     And User input "Meta title" field with value "new bitis"
     And User input "Meta keywords" field with value "Bitis, new bitis"

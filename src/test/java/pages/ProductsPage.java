@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
+import static common.ConstantUtils.*;
 import static data.ProductsData.PRODUCT_WITH_IMAGE;
 
 public class ProductsPage extends CommonPage {
@@ -22,8 +23,7 @@ public class ProductsPage extends CommonPage {
     }
 
     public void createProductByApi() throws JsonProcessingException {
-        String CREATE_PRODUCT_API = "http://localhost:3000/api/products";
-        APIResponse response = page.request().post(CREATE_PRODUCT_API, RequestOptions.create().setHeader("Content-Type", "application/json").setData(PRODUCT_WITH_IMAGE));
+        APIResponse response = page.request().post(COMMON_URL + CREATE_PRODUCT_API, RequestOptions.create().setHeader("Content-Type", "application/json").setData(PRODUCT_WITH_IMAGE));
 
         //Save name for search
         ObjectMapper mapper = new ObjectMapper();

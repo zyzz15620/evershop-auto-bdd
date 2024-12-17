@@ -1,6 +1,7 @@
 package steps;
 
 import com.microsoft.playwright.*;
+import common.ConfigUtils;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.Before;
@@ -10,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static common.ConstantUtils.*;
 import static data.ProductsData.STUB_RESPONSE_CREATE_PRODUCT;
 
 public class Hooks {
@@ -65,6 +67,8 @@ public class Hooks {
         });
     }
 
+
+
     @Before("@FrontEnd_Verify_CreateProduct")
     public void beforeEachProductCreate(){
         page.route("**", handler -> {
@@ -106,9 +110,8 @@ public class Hooks {
 
     @After
     public void afterEach(){
-        String DELETED_PRODUCT_API = "http://localhost:3000/api/products/%s";
         ids.forEach(id ->{
-            APIResponse response = page.request().delete(String.format(DELETED_PRODUCT_API, id));
+            APIResponse response = page.request().delete( COMMON_URL + String.format(DELETED_PRODUCT_API, id));
             String responseBody = new String(response.body(), StandardCharsets.UTF_8);
             System.out.println(responseBody);
         });

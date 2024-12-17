@@ -1,8 +1,8 @@
 Feature: Edit product
   Background:
     Given User navigate to admin login page
-    When User input "Email" field with value "total650@gmail.com"
-    And User input "Password" field with value "12345678"
+    When User input "Email" field with value "$ADMIN_EMAIL$"
+    And User input "Password" field with value "$ADMIN_PASSWORD$"
     And User click on button "SIGN IN"
     Then User should see "Dashboard" page
 

@@ -1,5 +1,6 @@
 package steps.admin;
 
+import common.ConfigUtils;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.CommonPage;
@@ -20,6 +21,11 @@ public class CommonStepdefs {
 
     @When("User input {string} field with value {string}")
     public void inputFieldByLabel(String label, String value) {
+        if("$ADMIN_EMAIL$".equals(value)){
+            value = ConfigUtils.getDotenv().get("adminEmail");
+        } else if ("$ADMIN_PASSWORD$".equals(value)) {
+            value = ConfigUtils.getDotenv().get("adminPassword");
+        }
         commonPage.inputFieldByLabel(label, value);
     }
 

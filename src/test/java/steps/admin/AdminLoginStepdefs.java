@@ -8,6 +8,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static common.ConstantUtils.ADMIN_LOGIN_PAGE;
+import static common.ConstantUtils.COMMON_URL;
 import static org.junit.Assert.assertNull;
 import static steps.Hooks.page;
 
@@ -15,7 +17,7 @@ public class AdminLoginStepdefs {
 
     @Given("User navigate to admin login page")
     public void navigateAdminLogin(){
-        page.navigate("http://localhost:3000/admin/login");
+        page.navigate(COMMON_URL + ADMIN_LOGIN_PAGE );
         String buttonSignInXpath = "//button[normalize-space(.//text())='SIGN IN']";
         assertThat(page.locator(buttonSignInXpath)).isVisible();
     }
