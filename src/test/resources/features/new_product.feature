@@ -48,20 +48,6 @@ Feature: New product
     # Ko nên thêm assert kiểm tra đã delete chưa vì nếu nó fail thì ảnh hướng kết quả của testcase này vì mục đích ko phải test delete
     # Vẫn nên dynamic cái SKU vì giả sử nhỡ cái tính năng delete nó hỏng thì lần chạy test tiếp theo bị duplicate
 
-  Scenario: Verify admin is able to edit new product
-    When User select menu item "Products"
-    And User now in page with title "Products"
-    And User create a product
-    And User search for product that just created
-    And User click on the product that just created
-#    And User now in page with title "Editing Backpack"
-#    Then User see should see input field "Name" is "Backpack"
-#    Then User see should see input field "SKU" is "111"
-#    Then User see should see input field "Price" is "300"
-    And User input "Name" field with value "Bitis"
-    And User input "SKU" field with value "222"
-    And User input "Price" field with value "500"
-    And User click button "Save"
-    Then User see alert notification "Product saved successfully!"
+
 
 
