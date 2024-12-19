@@ -11,5 +11,10 @@ import static io.cucumber.core.options.Constants.PLUGIN_PROPERTY_NAME;
 @SelectPackages("") //pages and steps already in java root
 @ConfigurationParameter(key= PLUGIN_PROPERTY_NAME, value = "pretty,html:build/reports/cucumber-reports.html, io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "") //to guide the project read...
+@ConfigurationParameter(key = "cucumber.execution.parallel.enabled", value = "true")
+@ConfigurationParameter(key = "cucumber.execution.parallel.config.strategy", value = "dynamic")
+//@ConfigurationParameter(key = "cucumber.execution.parallel.config.strategy", value = "fixed")
+//@ConfigurationParameter(key = "cucumber.execution.parallel.config.fixed.parallelism", value = "4")
+
 class CucumberRunnerTest {
 }

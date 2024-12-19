@@ -11,10 +11,11 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static common.ConstantUtils.ADMIN_LOGIN_PAGE;
 import static common.ConstantUtils.COMMON_URL;
 import static org.junit.Assert.assertNull;
-import static steps.Hooks.page;
+import static steps.Hooks.pageMap;
+//import static steps.Hooks.page;
 
 public class AdminLoginStepdefs {
-
+    private final Page page = pageMap.get(Thread.currentThread().getName());
     @Given("User navigate to admin login page")
     public void navigateAdminLogin(){
         page.navigate(COMMON_URL + ADMIN_LOGIN_PAGE );

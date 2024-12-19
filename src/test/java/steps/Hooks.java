@@ -1,43 +1,70 @@
 package steps;
 
 import com.microsoft.playwright.*;
-import common.ConfigUtils;
+import common.BrowserManagement;
 import io.cucumber.java.*;
 import io.qameta.allure.Allure;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import static common.BrowserManagement.getBrowserInstance;
 import static common.ConstantUtils.*;
 import static data.ProductsData.STUB_RESPONSE_CREATE_PRODUCT;
 
 public class Hooks {
-    public static Playwright playwright;
-    public static Browser browser;
-    public static BrowserContext context;
-    public static Page page;
-    static List<String> ids = new ArrayList<>();
+    public static Map<String, Playwright> playwrightMap = new HashMap<>();
+    public static Map<String, Browser> browserMap = new HashMap<>();
+    public static Map<String, BrowserContext> contextMap = new HashMap<>();
+    public static Map<String, Page> pageMap = new HashMap<>();
+
+//    public static Playwright playwright;
+//    public static Browser browser;
+//    public static BrowserContext context;
+//    public static Page page;
+    static Set<String> ids = new HashSet<>();
 
     @BeforeAll
     public static void beforeAll(){
-        playwright = Playwright.create();
-        browser = getBrowserInstance();
-    }
+//        playwright = Playwright.create();
+//        browser = getBrowserInstance();
+//        playwrightMap.put(Thread.currentThread().getName(), Playwright.create());
+//        browserMap.put(Thread.currentThread().getName(), BrowserManagement.getBrowserInstance());
 
+    }
+    private Thread currentThread = Thread.currentThread();
     @AfterAll
     public static void afterAll() {
-        playwright.close();
+//        playwright.close();
+        playwrightMap.get(Thread.currentThread().getName()).close();
     }
 
     @Before(order = 999) //default is 1000
-    public void beforeEach(){
-        context = browser.newContext();
-        page = context.newPage();
-        page.route("**", handler -> {
+    public void beforeEach() throws InterruptedException {
+//        context = browser.newContext();
+//        context = browserMap.get(Thread.currentThreadName().getName()).newContext();
+        String currentThreadName = Thread.currentThread().getName();
+        if(playwrightMap.get(currentThreadName)==null){
+            Playwright currentPlayWright = Playwright.create();
+            currentThread.sleep(4000); // Playwright.create() take time to create
+            playwrightMap.put(currentThreadName, currentPlayWright);
+        }
+        if(browserMap.get(currentThreadName)==null){
+            Browser currentBrowser = BrowserManagement.getBrowserInstance();
+            currentThread.sleep(4000);
+            browserMap.put(currentThreadName, currentBrowser);
+             // getBrowserInstance() also take time to launches browser
+        }
+        if(contextMap.get(currentThreadName)==null){
+            BrowserContext currentContext = browserMap.get(currentThreadName).newContext();
+            contextMap.put(currentThreadName, currentContext);
+        }
+        if(pageMap.get(currentThreadName)==null){
+            Page currentPage = contextMap.get(currentThreadName).newPage();
+            pageMap.put(currentThreadName, currentPage);
+        }
+        pageMap.get(currentThreadName).route("**", handler -> {
             String pageUrl = handler.request().url();
             String method = handler.request().method();
             System.out.println("URL: " + pageUrl);
@@ -52,7 +79,7 @@ public class Hooks {
 
     @Before("@FrontEnd_Verify_Login")
     public void beforeEachLogin(){
-        page.route("**", handler -> {
+        pageMap.get(Thread.currentThread().getName()).route("**", handler -> {
             String pageUrl = handler.request().url();
             String method = handler.request().method();
             System.out.println("URL: " + pageUrl);
@@ -72,7 +99,7 @@ public class Hooks {
 
     @Before("@FrontEnd_Verify_CreateProduct")
     public void beforeEachProductCreate(){
-        page.route("**", handler -> {
+        pageMap.get(Thread.currentThread().getName()).route("**", handler -> {
             String pageUrl = handler.request().url();
             String method = handler.request().method();
             System.out.println("URL: " + pageUrl);
@@ -110,19 +137,26 @@ public class Hooks {
 //    }
 
     @After
-    public void afterEach(){
+    public void afterEach() throws InterruptedException {
+        String currentThreadName = Thread.currentThread().getName();
+
         ids.forEach(id ->{
-            APIResponse response = page.request().delete( COMMON_URL + String.format(DELETED_PRODUCT_API, id));
-            String responseBody = new String(response.body(), StandardCharsets.UTF_8);
-            System.out.println(responseBody);
+            try {
+                Thread.sleep(2000);
+                APIResponse response = pageMap.get(currentThreadName).request().delete( COMMON_URL + String.format(DELETED_PRODUCT_API, id));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
-        context.close();
+        contextMap.get(currentThreadName).close();
+        contextMap.remove(currentThreadName);
+        //remove ra khỏi map để đc tạo lại cho cái thread đó ở mỗi test
     }
 
-    @After
+    @After(order = 999)
     public void afterFail(Scenario scenario){
         if(scenario.isFailed()){
-            byte[] image = page.screenshot(new Page.ScreenshotOptions().
+            byte[] image = pageMap.get(Thread.currentThread().getName()).screenshot(new Page.ScreenshotOptions().
                     setPath(Path.of("build/screenshots/" + scenario.getName().replaceAll("\\s", "_") + ".png")).
                     setFullPage(true));
             Allure.addAttachment("Screenshot", new ByteArrayInputStream(image)); //This is to add picture to allure report

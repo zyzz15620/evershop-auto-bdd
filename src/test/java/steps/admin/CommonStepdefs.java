@@ -1,13 +1,19 @@
 package steps.admin;
 
+import com.microsoft.playwright.Page;
 import common.ConfigUtils;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.CommonPage;
 
-import static steps.Hooks.page;
+import static steps.Hooks.pageMap;
+
+//import static steps.Hooks.page;
 
 public class CommonStepdefs {
+
+    private final Page page = pageMap.get(Thread.currentThread().getName());
+
     private CommonPage commonPage = new CommonPage(page);
     @When("User select menu item {string}")
     public void selectMenuItem(String label) {

@@ -7,7 +7,4 @@ public class ConstantUtils {
     public static final String ADMIN_LOGIN_PAGE = "/admin/login";
     public static final String DELETED_PRODUCT_API = "/api/products/%s";
     public static final String CREATE_PRODUCT_API = "/api/products";
-
-
-
 }

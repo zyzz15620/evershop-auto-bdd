@@ -1,6 +1,7 @@
 package steps.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.microsoft.playwright.Page;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -8,9 +9,13 @@ import pages.EditProductPage;
 import pages.NewProductPage;
 import pages.ProductsPage;
 
-import static steps.Hooks.page;
+import static steps.Hooks.pageMap;
+
+//import static steps.Hooks.page;
 
 public class NewProductStepdefs {
+    private final Page page = pageMap.get(Thread.currentThread().getName());
+
     NewProductPage newProductPage = new NewProductPage(page);
     EditProductPage editProductPage = new EditProductPage(page);
     ProductsPage productsPage = new ProductsPage(page);
@@ -60,7 +65,7 @@ public class NewProductStepdefs {
     }
 
     @Then("User see alert notification {string}")
-    public void userSeeAlertNotification(String text) {
+    public void userSeeAlertNotification(String text) throws InterruptedException {
         newProductPage.userSeeAlertNotification(text);
     }
 
