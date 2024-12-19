@@ -2,12 +2,12 @@ package steps;
 
 import com.microsoft.playwright.*;
 import common.ConfigUtils;
-import io.cucumber.java.After;
-import io.cucumber.java.AfterAll;
-import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
+import io.cucumber.java.*;
+import io.qameta.allure.Allure;
 
+import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,4 +118,15 @@ public class Hooks {
         });
         context.close();
     }
+
+    @After
+    public void afterFail(Scenario scenario){
+        if(scenario.isFailed()){
+            byte[] image = page.screenshot(new Page.ScreenshotOptions().
+                    setPath(Path.of("build/screenshots/" + scenario.getName().replaceAll("\\s", "_") + ".png")).
+                    setFullPage(true));
+            Allure.addAttachment("Screenshot", new ByteArrayInputStream(image)); //This is to add picture to allure report
+        }
+    }
+    //Save in build so that every time we run test, the old image will be cleared
 }
